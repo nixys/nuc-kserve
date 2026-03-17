@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "nuc-kserve values",
+  "description": "Schema for nuc-kserve Helm chart values.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "nameOverride": {
+      "type": "string",
+      "description": "Override the chart name used in generated labels."
+    },
+    "commonLabels": {
+      "$ref": "#/definitions/stringMap",
+      "description": "Labels merged into every rendered resource."
+    },
+    "commonAnnotations": {
+      "$ref": "#/definitions/stringMap",
+      "description": "Annotations merged into every rendered resource."
+    },
+    "apiVersions": {
+      "type": "object",
+      "description": "Default API version overrides per supported KServe kind.",
+      "additionalProperties": false,
+      "properties": {
+        "clusterServingRuntime": { "$ref": "#/definitions/nonEmptyString" },
+        "clusterStorageContainer": { "$ref": "#/definitions/nonEmptyString" },
+        "inferenceGraph": { "$ref": "#/definitions/nonEmptyString" },
+        "inferenceService": { "$ref": "#/definitions/nonEmptyString" },
+        "localModelCache": { "$ref": "#/definitions/nonEmptyString" },
+        "localModelNodeGroup": { "$ref": "#/definitions/nonEmptyString" },
+        "localModelNode": { "$ref": "#/definitions/nonEmptyString" },
+        "servingRuntime": { "$ref": "#/definitions/nonEmptyString" },
+        "trainedModel": { "$ref": "#/definitions/nonEmptyString" }
+      }
+    },
+    "clusterServingRuntimes": {
+      "$ref": "#/definitions/resourceList",
+      "description": "List of ClusterServingRuntime resources."
+    },
+    "clusterStorageContainers": {
+      "$ref": "#/definitions/resourceList",
+      "description": "List of ClusterStorageContainer resources."
+    },
+    "inferenceGraphs": {
+      "$ref": "#/definitions/resourceList",
+      "description": "List of InferenceGraph resources."
+    },
+    "inferenceServices": {
+      "$ref": "#/definitions/resourceList",
+      "description": "List of InferenceService resources."
+    },
+    "localModelCaches": {
+      "$ref": "#/definitions/resourceList",
+      "description": "List of LocalModelCache resources."
+    },
+    "localModelNodeGroups": {
+      "$ref": "#/definitions/resourceList",
+      "description": "List of LocalModelNodeGroup resources."
+    },
+    "localModelNodes": {
+      "$ref": "#/definitions/resourceList",
+      "description": "List of LocalModelNode resources."
+    },
+    "servingRuntimes": {
+      "$ref": "#/definitions/resourceList",
+      "description": "List of ServingRuntime resources."
+    },
+    "trainedModels": {
+      "$ref": "#/definitions/resourceList",
+      "description": "List of TrainedModel resources."
+    }
+  },
+  "definitions": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stringMap": {
+      "type": "object",
+      "default": {},
+      "propertyNames": {
+        "type": "string",
+        "minLength": 1
+      },
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "freeFormObject": {
+      "type": "object",
+      "description": "Arbitrary KServe payload passed through by the chart.",
+      "additionalProperties": true
+    },
+    "resourceItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "$ref": "#/definitions/nonEmptyString",
+          "description": "Resource name."
+        },
+        "namespace": {
+          "$ref": "#/definitions/nonEmptyString",
+          "description": "Namespace for namespaced resources. Ignored for cluster-scoped kinds."
+        },
+        "labels": {
+          "$ref": "#/definitions/stringMap",
+          "description": "Resource-specific labels."
+        },
+        "annotations": {
+          "$ref": "#/definitions/stringMap",
+          "description": "Resource-specific annotations."
+        },
+        "apiVersion": {
+          "$ref": "#/definitions/nonEmptyString",
+          "description": "Per-resource API version override."
+        },
+        "spec": {
+          "$ref": "#/definitions/freeFormObject",
+          "description": "Resource spec rendered as-is."
+        },
+        "status": {
+          "$ref": "#/definitions/freeFormObject",
+          "description": "Optional resource status rendered as-is."
+        }
+      }
+    },
+    "resourceList": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "$ref": "#/definitions/resourceItem"
+      }
+    }
+  }
+}

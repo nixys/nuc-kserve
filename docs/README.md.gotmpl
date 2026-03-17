@@ -81,29 +81,7 @@ The value contract is validated by [values.schema.json](values.schema.json).
 
 This section is generated from [values.yaml](values.yaml) by `helm-docs`. Edit [values.yaml](values.yaml) comments or [docs/README.md.gotmpl](docs/README.md.gotmpl), then run `pre-commit run helm-docs --all-files` or `make docs` if you need to refresh it outside a commit.
 
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| apiVersions.clusterServingRuntime | string | `"serving.kserve.io/v1alpha1"` | Default apiVersion for ClusterServingRuntime resources. |
-| apiVersions.clusterStorageContainer | string | `"serving.kserve.io/v1alpha1"` | Default apiVersion for ClusterStorageContainer resources. |
-| apiVersions.inferenceGraph | string | `"serving.kserve.io/v1alpha1"` | Default apiVersion for InferenceGraph resources. |
-| apiVersions.inferenceService | string | `"serving.kserve.io/v1beta1"` | Default apiVersion for InferenceService resources. |
-| apiVersions.localModelCache | string | `"serving.kserve.io/v1alpha1"` | Default apiVersion for LocalModelCache resources. |
-| apiVersions.localModelNode | string | `"serving.kserve.io/v1alpha1"` | Default apiVersion for LocalModelNode resources. |
-| apiVersions.localModelNodeGroup | string | `"serving.kserve.io/v1alpha1"` | Default apiVersion for LocalModelNodeGroup resources. |
-| apiVersions.servingRuntime | string | `"serving.kserve.io/v1alpha1"` | Default apiVersion for ServingRuntime resources. |
-| apiVersions.trainedModel | string | `"serving.kserve.io/v1alpha1"` | Default apiVersion for TrainedModel resources. |
-| clusterServingRuntimes | list | `[]` | ClusterServingRuntime resources to render. |
-| clusterStorageContainers | list | `[]` | ClusterStorageContainer resources to render. |
-| commonAnnotations | object | `{}` | Extra annotations applied to every rendered resource. |
-| commonLabels | object | `{}` | Extra labels applied to every rendered resource. |
-| inferenceGraphs | list | `[]` | InferenceGraph resources to render. |
-| inferenceServices | list | `[]` | InferenceService resources to render. |
-| localModelCaches | list | `[]` | LocalModelCache resources to render. |
-| localModelNodeGroups | list | `[]` | LocalModelNodeGroup resources to render. |
-| localModelNodes | list | `[]` | LocalModelNode resources to render. |
-| nameOverride | string | `""` | Override the default chart label name if needed. |
-| servingRuntimes | list | `[]` | ServingRuntime resources to render. |
-| trainedModels | list | `[]` | TrainedModel resources to render. |
+{{ template "chart.valuesTable" . }}
 
 ## Included Values Files
 

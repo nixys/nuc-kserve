@@ -1,0 +1,63 @@
+# -- Override the default chart label name if needed.
+nameOverride: ""
+
+# -- Extra labels applied to every rendered resource.
+commonLabels: {}
+# -- Extra annotations applied to every rendered resource.
+commonAnnotations: {}
+
+apiVersions:
+  # -- Default apiVersion for ClusterServingRuntime resources.
+  clusterServingRuntime: serving.kserve.io/v1alpha1
+  # -- Default apiVersion for ClusterStorageContainer resources.
+  clusterStorageContainer: serving.kserve.io/v1alpha1
+  # -- Default apiVersion for InferenceGraph resources.
+  inferenceGraph: serving.kserve.io/v1alpha1
+  # -- Default apiVersion for InferenceService resources.
+  inferenceService: serving.kserve.io/v1beta1
+  # -- Default apiVersion for LocalModelCache resources.
+  localModelCache: serving.kserve.io/v1alpha1
+  # -- Default apiVersion for LocalModelNodeGroup resources.
+  localModelNodeGroup: serving.kserve.io/v1alpha1
+  # -- Default apiVersion for LocalModelNode resources.
+  localModelNode: serving.kserve.io/v1alpha1
+  # -- Default apiVersion for ServingRuntime resources.
+  servingRuntime: serving.kserve.io/v1alpha1
+  # -- Default apiVersion for TrainedModel resources.
+  trainedModel: serving.kserve.io/v1alpha1
+
+# Each list item supports:
+# - name: required
+# - namespace: optional for namespaced resources, defaults to the release namespace
+# - labels: optional
+# - annotations: optional
+# - apiVersion: optional override for a single resource
+# - spec: arbitrary resource spec
+# - status: optional raw status block for fixtures and synthetic manifests
+
+# -- ClusterServingRuntime resources to render.
+clusterServingRuntimes: []
+
+# -- ClusterStorageContainer resources to render.
+clusterStorageContainers: []
+
+# -- InferenceGraph resources to render.
+inferenceGraphs: []
+
+# -- InferenceService resources to render.
+inferenceServices: []
+
+# -- LocalModelCache resources to render.
+localModelCaches: []
+
+# -- LocalModelNodeGroup resources to render.
+localModelNodeGroups: []
+
+# -- LocalModelNode resources to render.
+localModelNodes: []
+
+# -- ServingRuntime resources to render.
+servingRuntimes: []
+
+# -- TrainedModel resources to render.
+trainedModels: []
