@@ -1,4 +1,6 @@
 {{- range $index, $item := .Values.servingRuntimes }}
+{{- if or (not (hasKey $item "enabled")) $item.enabled }}
 {{- if gt $index 0 }}---{{ end }}
 {{ include "nuc-kserve.renderResource" (dict "root" $ "item" $item "resourceKey" (printf "servingRuntimes[%d]" $index) "defaultApiVersion" $.Values.apiVersions.servingRuntime "kind" "ServingRuntime" "namespaced" true) }}
+{{- end }}
 {{- end }}

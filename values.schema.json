@@ -96,6 +96,10 @@
       "additionalProperties": false,
       "required": ["name"],
       "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Set to false to keep a documented resource stub from rendering."
+        },
         "name": {
           "$ref": "#/definitions/nonEmptyString",
           "description": "Resource name."

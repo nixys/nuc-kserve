@@ -60,6 +60,7 @@ Every list item uses the same generic contract:
 
 | Field | Required | Description |
 |-------|----------|-------------|
+| `enabled` | no | Set to `false` to keep a documented stub entry from rendering. |
 | `name` | yes | Resource name. |
 | `namespace` | no | Namespace for namespaced resources. Defaults to the Helm release namespace. Ignored for cluster-scoped kinds. |
 | `labels` | no | Labels merged on top of built-in chart labels and `commonLabels`. |

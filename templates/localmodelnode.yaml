@@ -1,4 +1,6 @@
 {{- range $index, $item := .Values.localModelNodes }}
+{{- if or (not (hasKey $item "enabled")) $item.enabled }}
 {{- if gt $index 0 }}---{{ end }}
 {{ include "nuc-kserve.renderResource" (dict "root" $ "item" $item "resourceKey" (printf "localModelNodes[%d]" $index) "defaultApiVersion" $.Values.apiVersions.localModelNode "kind" "LocalModelNode" "namespaced" false) }}
+{{- end }}
 {{- end }}
