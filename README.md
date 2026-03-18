@@ -44,7 +44,7 @@ The chart can render these KServe kinds:
 
 ## Values Model
 
-Each top-level list in [values.yaml](values.yaml) maps to one resource kind:
+Each top-level map in [values.yaml](values.yaml) maps to one resource kind:
 
 - `clusterServingRuntimes`
 - `clusterStorageContainers`
@@ -56,12 +56,11 @@ Each top-level list in [values.yaml](values.yaml) maps to one resource kind:
 - `servingRuntimes`
 - `trainedModels`
 
-Every list item uses the same generic contract:
+Every map value uses the same generic contract, and the resource name comes from the map key:
 
 | Field | Required | Description |
 |-------|----------|-------------|
 | `enabled` | no | Set to `false` to keep a documented stub entry from rendering. |
-| `name` | yes | Resource name. |
 | `namespace` | no | Namespace for namespaced resources. Defaults to the Helm release namespace. Ignored for cluster-scoped kinds. |
 | `labels` | no | Labels merged on top of built-in chart labels and `commonLabels`. |
 | `annotations` | no | Annotations merged on top of `commonAnnotations`. |
@@ -93,87 +92,78 @@ This section is generated from [values.yaml](values.yaml) by `helm-docs`. Edit [
 | apiVersions.localModelNodeGroup | string | `"serving.kserve.io/v1alpha1"` | Default apiVersion for LocalModelNodeGroup resources. |
 | apiVersions.servingRuntime | string | `"serving.kserve.io/v1alpha1"` | Default apiVersion for ServingRuntime resources. |
 | apiVersions.trainedModel | string | `"serving.kserve.io/v1alpha1"` | Default apiVersion for TrainedModel resources. |
-| clusterServingRuntimes | list | `[{"annotations":{},"apiVersion":"serving.kserve.io/v1alpha1","enabled":false,"labels":{},"name":"example-clusterservingruntime","spec":{"containers":[{"args":["--model_name={{.Name}}","--model_dir=/mnt/models"],"image":"example/runtime:latest","name":"kserve-container"}],"protocolVersions":["v1","v2"],"supportedModelFormats":[{"autoSelect":true,"name":"sklearn","priority":1,"version":"1"}]},"status":{}}]` | ClusterServingRuntime resources to render. |
-| clusterServingRuntimes[0].annotations | object | `{}` | Additional resource annotations. |
-| clusterServingRuntimes[0].apiVersion | string | `"serving.kserve.io/v1alpha1"` | Per-resource apiVersion override. |
-| clusterServingRuntimes[0].enabled | bool | `false` | Set to `true` to render this resource. |
-| clusterServingRuntimes[0].labels | object | `{}` | Additional resource labels. |
-| clusterServingRuntimes[0].name | string | `"example-clusterservingruntime"` | Resource name. |
-| clusterServingRuntimes[0].spec.containers[0].args | list | `["--model_name={{.Name}}","--model_dir=/mnt/models"]` | Runtime container arguments. |
-| clusterServingRuntimes[0].spec.containers[0].image | string | `"example/runtime:latest"` | Runtime container image. |
-| clusterServingRuntimes[0].spec.containers[0].name | string | `"kserve-container"` | Runtime container name. |
-| clusterServingRuntimes[0].spec.protocolVersions | list | `["v1","v2"]` | Supported inference protocol versions. |
-| clusterServingRuntimes[0].spec.supportedModelFormats[0].autoSelect | bool | `true` | Mark this format for autoselection. |
-| clusterServingRuntimes[0].spec.supportedModelFormats[0].name | string | `"sklearn"` | Supported model format name. |
-| clusterServingRuntimes[0].spec.supportedModelFormats[0].priority | int | `1` | Priority used when multiple runtimes support the same format. |
-| clusterServingRuntimes[0].spec.supportedModelFormats[0].version | string | `"1"` | Supported model format version. |
-| clusterServingRuntimes[0].status | object | `{}` | Optional synthetic status payload. |
-| clusterStorageContainers | list | `[{"annotations":{},"apiVersion":"serving.kserve.io/v1alpha1","enabled":false,"labels":{},"name":"example-clusterstoragecontainer","spec":{"container":{"image":"example/storage-initializer:latest","imagePullPolicy":"IfNotPresent","name":"storage-initializer"},"supportedUriFormats":[{"prefix":"s3://"},{"regex":"https?://(.+)/(.+)"}],"workloadType":"initContainer"},"status":{}}]` | ClusterStorageContainer resources to render. |
-| clusterStorageContainers[0].enabled | bool | `false` | Set to `true` to render this resource. |
-| clusterStorageContainers[0].name | string | `"example-clusterstoragecontainer"` | Resource name. |
-| clusterStorageContainers[0].spec.container.image | string | `"example/storage-initializer:latest"` | Storage initializer image. |
-| clusterStorageContainers[0].spec.container.imagePullPolicy | string | `"IfNotPresent"` | Image pull policy for the storage initializer. |
-| clusterStorageContainers[0].spec.container.name | string | `"storage-initializer"` | Storage initializer container name. |
-| clusterStorageContainers[0].spec.supportedUriFormats[0].prefix | string | `"s3://"` | URI prefix handled by this storage container. |
-| clusterStorageContainers[0].spec.supportedUriFormats[1].regex | string | `"https?://(.+)/(.+)"` | URI regex handled by this storage container. |
-| clusterStorageContainers[0].spec.workloadType | string | `"initContainer"` | Workload type used by the storage container. |
+| clusterServingRuntimes | object | `{"example-clusterservingruntime":{"annotations":{},"apiVersion":"serving.kserve.io/v1alpha1","enabled":false,"labels":{},"spec":{"containers":[{"args":["--model_name={{.Name}}","--model_dir=/mnt/models"],"image":"example/runtime:latest","name":"kserve-container"}],"protocolVersions":["v1","v2"],"supportedModelFormats":[{"autoSelect":true,"name":"sklearn","priority":1,"version":"1"}]},"status":{}}}` | ClusterServingRuntime resources to render, keyed by resource name. |
+| clusterServingRuntimes.example-clusterservingruntime.annotations | object | `{}` | Additional resource annotations. |
+| clusterServingRuntimes.example-clusterservingruntime.apiVersion | string | `"serving.kserve.io/v1alpha1"` | Per-resource apiVersion override. |
+| clusterServingRuntimes.example-clusterservingruntime.enabled | bool | `false` | Set to `true` to render this resource. |
+| clusterServingRuntimes.example-clusterservingruntime.labels | object | `{}` | Additional resource labels. |
+| clusterServingRuntimes.example-clusterservingruntime.spec.containers[0].args | list | `["--model_name={{.Name}}","--model_dir=/mnt/models"]` | Runtime container arguments. |
+| clusterServingRuntimes.example-clusterservingruntime.spec.containers[0].image | string | `"example/runtime:latest"` | Runtime container image. |
+| clusterServingRuntimes.example-clusterservingruntime.spec.containers[0].name | string | `"kserve-container"` | Runtime container name. |
+| clusterServingRuntimes.example-clusterservingruntime.spec.protocolVersions | list | `["v1","v2"]` | Supported inference protocol versions. |
+| clusterServingRuntimes.example-clusterservingruntime.spec.supportedModelFormats[0].autoSelect | bool | `true` | Mark this format for autoselection. |
+| clusterServingRuntimes.example-clusterservingruntime.spec.supportedModelFormats[0].name | string | `"sklearn"` | Supported model format name. |
+| clusterServingRuntimes.example-clusterservingruntime.spec.supportedModelFormats[0].priority | int | `1` | Priority used when multiple runtimes support the same format. |
+| clusterServingRuntimes.example-clusterservingruntime.spec.supportedModelFormats[0].version | string | `"1"` | Supported model format version. |
+| clusterServingRuntimes.example-clusterservingruntime.status | object | `{}` | Optional synthetic status payload. |
+| clusterStorageContainers | object | `{"example-clusterstoragecontainer":{"annotations":{},"apiVersion":"serving.kserve.io/v1alpha1","enabled":false,"labels":{},"spec":{"container":{"image":"example/storage-initializer:latest","imagePullPolicy":"IfNotPresent","name":"storage-initializer"},"supportedUriFormats":[{"prefix":"s3://"},{"regex":"https?://(.+)/(.+)"}],"workloadType":"initContainer"},"status":{}}}` | ClusterStorageContainer resources to render, keyed by resource name. |
+| clusterStorageContainers.example-clusterstoragecontainer.enabled | bool | `false` | Set to `true` to render this resource. |
+| clusterStorageContainers.example-clusterstoragecontainer.spec.container.image | string | `"example/storage-initializer:latest"` | Storage initializer image. |
+| clusterStorageContainers.example-clusterstoragecontainer.spec.container.imagePullPolicy | string | `"IfNotPresent"` | Image pull policy for the storage initializer. |
+| clusterStorageContainers.example-clusterstoragecontainer.spec.container.name | string | `"storage-initializer"` | Storage initializer container name. |
+| clusterStorageContainers.example-clusterstoragecontainer.spec.supportedUriFormats[0].prefix | string | `"s3://"` | URI prefix handled by this storage container. |
+| clusterStorageContainers.example-clusterstoragecontainer.spec.supportedUriFormats[1].regex | string | `"https?://(.+)/(.+)"` | URI regex handled by this storage container. |
+| clusterStorageContainers.example-clusterstoragecontainer.spec.workloadType | string | `"initContainer"` | Workload type used by the storage container. |
 | commonAnnotations | object | `{}` | Extra annotations applied to every rendered resource. |
 | commonLabels | object | `{}` | Extra labels applied to every rendered resource. |
-| inferenceGraphs | list | `[{"annotations":{},"apiVersion":"serving.kserve.io/v1alpha1","enabled":false,"labels":{},"name":"example-inferencegraph","namespace":"default","spec":{"nodes":{"root":{"routerType":"Sequence","steps":[{"serviceName":"predictor-a"},{"data":"$request","serviceName":"predictor-b"}]}}},"status":{}}]` | InferenceGraph resources to render. |
-| inferenceGraphs[0].enabled | bool | `false` | Set to `true` to render this resource. |
-| inferenceGraphs[0].name | string | `"example-inferencegraph"` | Resource name. |
-| inferenceGraphs[0].namespace | string | `"default"` | Resource namespace. Defaults to the Helm release namespace. |
-| inferenceGraphs[0].spec.nodes.root.routerType | string | `"Sequence"` | Router strategy used by the root node. |
-| inferenceGraphs[0].spec.nodes.root.steps[0].serviceName | string | `"predictor-a"` | Downstream service name for a graph step. |
-| inferenceGraphs[0].spec.nodes.root.steps[1].data | string | `"$request"` | Optional payload source for the next step. |
-| inferenceServices | list | `[{"annotations":{},"apiVersion":"serving.kserve.io/v1beta1","enabled":false,"labels":{},"name":"example-inferenceservice","namespace":"default","spec":{"predictor":{"sklearn":{"storageUri":"s3://models/sklearn"}}},"status":{}}]` | InferenceService resources to render. |
-| inferenceServices[0].enabled | bool | `false` | Set to `true` to render this resource. |
-| inferenceServices[0].name | string | `"example-inferenceservice"` | Resource name. |
-| inferenceServices[0].namespace | string | `"default"` | Resource namespace. Defaults to the Helm release namespace. |
-| inferenceServices[0].spec.predictor.sklearn.storageUri | string | `"s3://models/sklearn"` | Model storage URI for the built-in sklearn predictor. |
-| localModelCaches | list | `[{"annotations":{},"apiVersion":"serving.kserve.io/v1alpha1","enabled":false,"labels":{},"name":"example-localmodelcache","spec":{"modelSize":"10Gi","nodeGroups":["example-node-group"],"sourceModelUri":"s3://models/example"},"status":{}}]` | LocalModelCache resources to render. |
-| localModelCaches[0].enabled | bool | `false` | Set to `true` to render this resource. |
-| localModelCaches[0].name | string | `"example-localmodelcache"` | Resource name. |
-| localModelCaches[0].spec.modelSize | string | `"10Gi"` | Estimated cached model size. |
-| localModelCaches[0].spec.nodeGroups | list | `["example-node-group"]` | Target LocalModelNodeGroup names. |
-| localModelCaches[0].spec.sourceModelUri | string | `"s3://models/example"` | Source model URI. |
-| localModelNodeGroups | list | `[{"annotations":{},"apiVersion":"serving.kserve.io/v1alpha1","enabled":false,"labels":{},"name":"example-localmodelnodegroup","spec":{"persistentVolumeClaimSpec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"20Gi"}},"storageClassName":"standard"},"persistentVolumeSpec":{"accessModes":["ReadWriteOnce"],"capacity":{"storage":"20Gi"},"hostPath":{"path":"/var/lib/kserve/localmodel"},"persistentVolumeReclaimPolicy":"Delete"},"storageLimit":"100Gi"},"status":{}}]` | LocalModelNodeGroup resources to render. |
-| localModelNodeGroups[0].enabled | bool | `false` | Set to `true` to render this resource. |
-| localModelNodeGroups[0].name | string | `"example-localmodelnodegroup"` | Resource name. |
-| localModelNodeGroups[0].spec.persistentVolumeClaimSpec.accessModes | list | `["ReadWriteOnce"]` | PersistentVolumeClaim access modes. |
-| localModelNodeGroups[0].spec.persistentVolumeClaimSpec.resources.requests.storage | string | `"20Gi"` | Requested PVC storage size. |
-| localModelNodeGroups[0].spec.persistentVolumeClaimSpec.storageClassName | string | `"standard"` | PVC storage class name. |
-| localModelNodeGroups[0].spec.persistentVolumeSpec.accessModes | list | `["ReadWriteOnce"]` | Backing PersistentVolume access modes. |
-| localModelNodeGroups[0].spec.persistentVolumeSpec.capacity.storage | string | `"20Gi"` | Backing PersistentVolume storage size. |
-| localModelNodeGroups[0].spec.persistentVolumeSpec.hostPath.path | string | `"/var/lib/kserve/localmodel"` | Host path used by the backing PersistentVolume. |
-| localModelNodeGroups[0].spec.persistentVolumeSpec.persistentVolumeReclaimPolicy | string | `"Delete"` | Reclaim policy for the backing PersistentVolume. |
-| localModelNodeGroups[0].spec.storageLimit | string | `"100Gi"` | Maximum aggregate storage allowed for the node group. |
-| localModelNodes | list | `[{"annotations":{},"apiVersion":"serving.kserve.io/v1alpha1","enabled":false,"labels":{},"name":"example-localmodelnode","spec":{"localModels":[{"modelName":"example-model","nodeGroup":"example-node-group","sourceModelUri":"s3://models/example"}]},"status":{}}]` | LocalModelNode resources to render. |
-| localModelNodes[0].enabled | bool | `false` | Set to `true` to render this resource. |
-| localModelNodes[0].name | string | `"example-localmodelnode"` | Resource name. |
-| localModelNodes[0].spec.localModels[0].modelName | string | `"example-model"` | Logical model name stored on the node. |
-| localModelNodes[0].spec.localModels[0].nodeGroup | string | `"example-node-group"` | Target node group for this local model. |
-| localModelNodes[0].spec.localModels[0].sourceModelUri | string | `"s3://models/example"` | Source model URI for this local model. |
+| inferenceGraphs | object | `{"example-inferencegraph":{"annotations":{},"apiVersion":"serving.kserve.io/v1alpha1","enabled":false,"labels":{},"namespace":"default","spec":{"nodes":{"root":{"routerType":"Sequence","steps":[{"serviceName":"predictor-a"},{"data":"$request","serviceName":"predictor-b"}]}}},"status":{}}}` | InferenceGraph resources to render, keyed by resource name. |
+| inferenceGraphs.example-inferencegraph.enabled | bool | `false` | Set to `true` to render this resource. |
+| inferenceGraphs.example-inferencegraph.namespace | string | `"default"` | Resource namespace. Defaults to the Helm release namespace. |
+| inferenceGraphs.example-inferencegraph.spec.nodes.root.routerType | string | `"Sequence"` | Router strategy used by the root node. |
+| inferenceGraphs.example-inferencegraph.spec.nodes.root.steps[0].serviceName | string | `"predictor-a"` | Downstream service name for a graph step. |
+| inferenceGraphs.example-inferencegraph.spec.nodes.root.steps[1].data | string | `"$request"` | Optional payload source for the next step. |
+| inferenceServices | object | `{"example-inferenceservice":{"annotations":{},"apiVersion":"serving.kserve.io/v1beta1","enabled":false,"labels":{},"namespace":"default","spec":{"predictor":{"sklearn":{"storageUri":"s3://models/sklearn"}}},"status":{}}}` | InferenceService resources to render, keyed by resource name. |
+| inferenceServices.example-inferenceservice.enabled | bool | `false` | Set to `true` to render this resource. |
+| inferenceServices.example-inferenceservice.namespace | string | `"default"` | Resource namespace. Defaults to the Helm release namespace. |
+| inferenceServices.example-inferenceservice.spec.predictor.sklearn.storageUri | string | `"s3://models/sklearn"` | Model storage URI for the built-in sklearn predictor. |
+| localModelCaches | object | `{"example-localmodelcache":{"annotations":{},"apiVersion":"serving.kserve.io/v1alpha1","enabled":false,"labels":{},"spec":{"modelSize":"10Gi","nodeGroups":["example-node-group"],"sourceModelUri":"s3://models/example"},"status":{}}}` | LocalModelCache resources to render, keyed by resource name. |
+| localModelCaches.example-localmodelcache.enabled | bool | `false` | Set to `true` to render this resource. |
+| localModelCaches.example-localmodelcache.spec.modelSize | string | `"10Gi"` | Estimated cached model size. |
+| localModelCaches.example-localmodelcache.spec.nodeGroups | list | `["example-node-group"]` | Target LocalModelNodeGroup names. |
+| localModelCaches.example-localmodelcache.spec.sourceModelUri | string | `"s3://models/example"` | Source model URI. |
+| localModelNodeGroups | object | `{"example-localmodelnodegroup":{"annotations":{},"apiVersion":"serving.kserve.io/v1alpha1","enabled":false,"labels":{},"spec":{"persistentVolumeClaimSpec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"20Gi"}},"storageClassName":"standard"},"persistentVolumeSpec":{"accessModes":["ReadWriteOnce"],"capacity":{"storage":"20Gi"},"hostPath":{"path":"/var/lib/kserve/localmodel"},"persistentVolumeReclaimPolicy":"Delete"},"storageLimit":"100Gi"},"status":{}}}` | LocalModelNodeGroup resources to render, keyed by resource name. |
+| localModelNodeGroups.example-localmodelnodegroup.enabled | bool | `false` | Set to `true` to render this resource. |
+| localModelNodeGroups.example-localmodelnodegroup.spec.persistentVolumeClaimSpec.accessModes | list | `["ReadWriteOnce"]` | PersistentVolumeClaim access modes. |
+| localModelNodeGroups.example-localmodelnodegroup.spec.persistentVolumeClaimSpec.resources.requests.storage | string | `"20Gi"` | Requested PVC storage size. |
+| localModelNodeGroups.example-localmodelnodegroup.spec.persistentVolumeClaimSpec.storageClassName | string | `"standard"` | PVC storage class name. |
+| localModelNodeGroups.example-localmodelnodegroup.spec.persistentVolumeSpec.accessModes | list | `["ReadWriteOnce"]` | Backing PersistentVolume access modes. |
+| localModelNodeGroups.example-localmodelnodegroup.spec.persistentVolumeSpec.capacity.storage | string | `"20Gi"` | Backing PersistentVolume storage size. |
+| localModelNodeGroups.example-localmodelnodegroup.spec.persistentVolumeSpec.hostPath.path | string | `"/var/lib/kserve/localmodel"` | Host path used by the backing PersistentVolume. |
+| localModelNodeGroups.example-localmodelnodegroup.spec.persistentVolumeSpec.persistentVolumeReclaimPolicy | string | `"Delete"` | Reclaim policy for the backing PersistentVolume. |
+| localModelNodeGroups.example-localmodelnodegroup.spec.storageLimit | string | `"100Gi"` | Maximum aggregate storage allowed for the node group. |
+| localModelNodes | object | `{"example-localmodelnode":{"annotations":{},"apiVersion":"serving.kserve.io/v1alpha1","enabled":false,"labels":{},"spec":{"localModels":[{"modelName":"example-model","nodeGroup":"example-node-group","sourceModelUri":"s3://models/example"}]},"status":{}}}` | LocalModelNode resources to render, keyed by resource name. |
+| localModelNodes.example-localmodelnode.enabled | bool | `false` | Set to `true` to render this resource. |
+| localModelNodes.example-localmodelnode.spec.localModels[0].modelName | string | `"example-model"` | Logical model name stored on the node. |
+| localModelNodes.example-localmodelnode.spec.localModels[0].nodeGroup | string | `"example-node-group"` | Target node group for this local model. |
+| localModelNodes.example-localmodelnode.spec.localModels[0].sourceModelUri | string | `"s3://models/example"` | Source model URI for this local model. |
 | nameOverride | string | `""` | Override the default chart label name if needed. |
-| servingRuntimes | list | `[{"annotations":{},"apiVersion":"serving.kserve.io/v1alpha1","enabled":false,"labels":{},"name":"example-servingruntime","namespace":"default","spec":{"containers":[{"args":["--model_name={{.Name}}","--model_dir=/mnt/models"],"image":"example/runtime:latest","name":"kserve-container"}],"supportedModelFormats":[{"autoSelect":true,"name":"sklearn","priority":1,"version":"1"}]},"status":{}}]` | ServingRuntime resources to render. |
-| servingRuntimes[0].enabled | bool | `false` | Set to `true` to render this resource. |
-| servingRuntimes[0].name | string | `"example-servingruntime"` | Resource name. |
-| servingRuntimes[0].namespace | string | `"default"` | Resource namespace. Defaults to the Helm release namespace. |
-| servingRuntimes[0].spec.containers[0].args | list | `["--model_name={{.Name}}","--model_dir=/mnt/models"]` | Runtime container arguments. |
-| servingRuntimes[0].spec.containers[0].image | string | `"example/runtime:latest"` | Runtime container image. |
-| servingRuntimes[0].spec.containers[0].name | string | `"kserve-container"` | Runtime container name. |
-| servingRuntimes[0].spec.supportedModelFormats[0].autoSelect | bool | `true` | Mark this format for autoselection. |
-| servingRuntimes[0].spec.supportedModelFormats[0].name | string | `"sklearn"` | Supported model format name. |
-| servingRuntimes[0].spec.supportedModelFormats[0].priority | int | `1` | Priority used when multiple runtimes support the same format. |
-| servingRuntimes[0].spec.supportedModelFormats[0].version | string | `"1"` | Supported model format version. |
-| trainedModels | list | `[{"annotations":{},"apiVersion":"serving.kserve.io/v1alpha1","enabled":false,"labels":{},"name":"example-trainedmodel","namespace":"default","spec":{"inferenceService":"example-inferenceservice","model":{"framework":"sklearn","memory":"2Gi","storageUri":"s3://models/sklearn"}},"status":{}}]` | TrainedModel resources to render. |
-| trainedModels[0].enabled | bool | `false` | Set to `true` to render this resource. |
-| trainedModels[0].name | string | `"example-trainedmodel"` | Resource name. |
-| trainedModels[0].namespace | string | `"default"` | Resource namespace. Defaults to the Helm release namespace. |
-| trainedModels[0].spec.inferenceService | string | `"example-inferenceservice"` | Target InferenceService name. |
-| trainedModels[0].spec.model.framework | string | `"sklearn"` | Model framework identifier. |
-| trainedModels[0].spec.model.memory | string | `"2Gi"` | Memory request associated with the trained model. |
-| trainedModels[0].spec.model.storageUri | string | `"s3://models/sklearn"` | Model storage URI. |
+| servingRuntimes | object | `{"example-servingruntime":{"annotations":{},"apiVersion":"serving.kserve.io/v1alpha1","enabled":false,"labels":{},"namespace":"default","spec":{"containers":[{"args":["--model_name={{.Name}}","--model_dir=/mnt/models"],"image":"example/runtime:latest","name":"kserve-container"}],"supportedModelFormats":[{"autoSelect":true,"name":"sklearn","priority":1,"version":"1"}]},"status":{}}}` | ServingRuntime resources to render, keyed by resource name. |
+| servingRuntimes.example-servingruntime.enabled | bool | `false` | Set to `true` to render this resource. |
+| servingRuntimes.example-servingruntime.namespace | string | `"default"` | Resource namespace. Defaults to the Helm release namespace. |
+| servingRuntimes.example-servingruntime.spec.containers[0].args | list | `["--model_name={{.Name}}","--model_dir=/mnt/models"]` | Runtime container arguments. |
+| servingRuntimes.example-servingruntime.spec.containers[0].image | string | `"example/runtime:latest"` | Runtime container image. |
+| servingRuntimes.example-servingruntime.spec.containers[0].name | string | `"kserve-container"` | Runtime container name. |
+| servingRuntimes.example-servingruntime.spec.supportedModelFormats[0].autoSelect | bool | `true` | Mark this format for autoselection. |
+| servingRuntimes.example-servingruntime.spec.supportedModelFormats[0].name | string | `"sklearn"` | Supported model format name. |
+| servingRuntimes.example-servingruntime.spec.supportedModelFormats[0].priority | int | `1` | Priority used when multiple runtimes support the same format. |
+| servingRuntimes.example-servingruntime.spec.supportedModelFormats[0].version | string | `"1"` | Supported model format version. |
+| trainedModels | object | `{"example-trainedmodel":{"annotations":{},"apiVersion":"serving.kserve.io/v1alpha1","enabled":false,"labels":{},"namespace":"default","spec":{"inferenceService":"example-inferenceservice","model":{"framework":"sklearn","memory":"2Gi","storageUri":"s3://models/sklearn"}},"status":{}}}` | TrainedModel resources to render, keyed by resource name. |
+| trainedModels.example-trainedmodel.enabled | bool | `false` | Set to `true` to render this resource. |
+| trainedModels.example-trainedmodel.namespace | string | `"default"` | Resource namespace. Defaults to the Helm release namespace. |
+| trainedModels.example-trainedmodel.spec.inferenceService | string | `"example-inferenceservice"` | Target InferenceService name. |
+| trainedModels.example-trainedmodel.spec.model.framework | string | `"sklearn"` | Model framework identifier. |
+| trainedModels.example-trainedmodel.spec.model.memory | string | `"2Gi"` | Memory request associated with the trained model. |
+| trainedModels.example-trainedmodel.spec.model.storageUri | string | `"s3://models/sklearn"` | Model storage URI. |
 
 ## Included Values Files
 

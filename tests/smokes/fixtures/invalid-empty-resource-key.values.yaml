@@ -1,5 +1,6 @@
 clusterServingRuntimes:
-  - spec:
+  "":
+    spec:
       supportedModelFormats:
         - name: sklearn
       containers:

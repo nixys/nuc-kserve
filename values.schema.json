@@ -34,40 +34,40 @@
       }
     },
     "clusterServingRuntimes": {
-      "$ref": "#/definitions/resourceList",
-      "description": "List of ClusterServingRuntime resources."
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of ClusterServingRuntime resources keyed by resource name."
     },
     "clusterStorageContainers": {
-      "$ref": "#/definitions/resourceList",
-      "description": "List of ClusterStorageContainer resources."
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of ClusterStorageContainer resources keyed by resource name."
     },
     "inferenceGraphs": {
-      "$ref": "#/definitions/resourceList",
-      "description": "List of InferenceGraph resources."
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of InferenceGraph resources keyed by resource name."
     },
     "inferenceServices": {
-      "$ref": "#/definitions/resourceList",
-      "description": "List of InferenceService resources."
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of InferenceService resources keyed by resource name."
     },
     "localModelCaches": {
-      "$ref": "#/definitions/resourceList",
-      "description": "List of LocalModelCache resources."
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of LocalModelCache resources keyed by resource name."
     },
     "localModelNodeGroups": {
-      "$ref": "#/definitions/resourceList",
-      "description": "List of LocalModelNodeGroup resources."
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of LocalModelNodeGroup resources keyed by resource name."
     },
     "localModelNodes": {
-      "$ref": "#/definitions/resourceList",
-      "description": "List of LocalModelNode resources."
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of LocalModelNode resources keyed by resource name."
     },
     "servingRuntimes": {
-      "$ref": "#/definitions/resourceList",
-      "description": "List of ServingRuntime resources."
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of ServingRuntime resources keyed by resource name."
     },
     "trainedModels": {
-      "$ref": "#/definitions/resourceList",
-      "description": "List of TrainedModel resources."
+      "$ref": "#/definitions/resourceMap",
+      "description": "Map of TrainedModel resources keyed by resource name."
     }
   },
   "definitions": {
@@ -94,15 +94,10 @@
     "resourceItem": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name"],
       "properties": {
         "enabled": {
           "type": "boolean",
           "description": "Set to false to keep a documented resource stub from rendering."
-        },
-        "name": {
-          "$ref": "#/definitions/nonEmptyString",
-          "description": "Resource name."
         },
         "namespace": {
           "$ref": "#/definitions/nonEmptyString",
@@ -130,10 +125,13 @@
         }
       }
     },
-    "resourceList": {
-      "type": "array",
-      "default": [],
-      "items": {
+    "resourceMap": {
+      "type": "object",
+      "default": {},
+      "propertyNames": {
+        "$ref": "#/definitions/nonEmptyString"
+      },
+      "additionalProperties": {
         "$ref": "#/definitions/resourceItem"
       }
     }

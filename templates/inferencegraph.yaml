@@ -1,6 +1,1 @@
-{{- range $index, $item := .Values.inferenceGraphs }}
-{{- if or (not (hasKey $item "enabled")) $item.enabled }}
-{{- if gt $index 0 }}---{{ end }}
-{{ include "nuc-kserve.renderResource" (dict "root" $ "item" $item "resourceKey" (printf "inferenceGraphs[%d]" $index) "defaultApiVersion" $.Values.apiVersions.inferenceGraph "kind" "InferenceGraph" "namespaced" true) }}
-{{- end }}
-{{- end }}
+{{ include "nuc-kserve.renderResourceCollection" (dict "root" $ "items" .Values.inferenceGraphs "resourceKey" "inferenceGraphs" "defaultApiVersion" $.Values.apiVersions.inferenceGraph "kind" "InferenceGraph" "namespaced" true) }}

@@ -21,7 +21,7 @@ apiVersions:
   trainedModel: serving.kserve.io/v1alpha1
 
 clusterServingRuntimes:
-  - name: sklearn-cluster-runtime
+  sklearn-cluster-runtime:
     labels:
       component: runtime
     annotations:
@@ -43,7 +43,7 @@ clusterServingRuntimes:
             - --model_dir=/mnt/models
 
 clusterStorageContainers:
-  - name: default-storage
+  default-storage:
     labels:
       component: storage
     spec:
@@ -58,7 +58,7 @@ clusterStorageContainers:
       workloadType: initContainer
 
 inferenceGraphs:
-  - name: model-chain
+  model-chain:
     namespace: ml-platform
     labels:
       component: graph
@@ -72,7 +72,7 @@ inferenceGraphs:
               data: $request
 
 inferenceServices:
-  - name: sklearn-iris
+  sklearn-iris:
     namespace: ml-platform
     labels:
       component: inference-service
@@ -84,7 +84,7 @@ inferenceServices:
           storageUri: gs://kfserving-examples/models/sklearn/1.0/model
 
 localModelCaches:
-  - name: bert-cache
+  bert-cache:
     labels:
       component: localmodel-cache
     spec:
@@ -94,7 +94,7 @@ localModelCaches:
       sourceModelUri: s3://models/bert-base
 
 localModelNodeGroups:
-  - name: ssd-cache-group
+  ssd-cache-group:
     labels:
       component: localmodel-node-group
     spec:
@@ -116,7 +116,7 @@ localModelNodeGroups:
       storageLimit: 100Gi
 
 localModelNodes:
-  - name: worker-cache-01
+  worker-cache-01:
     labels:
       component: localmodel-node
     spec:
@@ -126,7 +126,7 @@ localModelNodes:
           sourceModelUri: s3://models/bert-base
 
 servingRuntimes:
-  - name: sklearn-runtime
+  sklearn-runtime:
     namespace: ml-platform
     labels:
       component: serving-runtime
@@ -144,7 +144,7 @@ servingRuntimes:
             - --model_dir=/mnt/models
 
 trainedModels:
-  - name: sklearn-iris-v1
+  sklearn-iris-v1:
     namespace: ml-platform
     labels:
       component: trained-model

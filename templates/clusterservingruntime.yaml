@@ -1,6 +1,1 @@
-{{- range $index, $item := .Values.clusterServingRuntimes }}
-{{- if or (not (hasKey $item "enabled")) $item.enabled }}
-{{- if gt $index 0 }}---{{ end }}
-{{ include "nuc-kserve.renderResource" (dict "root" $ "item" $item "resourceKey" (printf "clusterServingRuntimes[%d]" $index) "defaultApiVersion" $.Values.apiVersions.clusterServingRuntime "kind" "ClusterServingRuntime" "namespaced" false) }}
-{{- end }}
-{{- end }}
+{{ include "nuc-kserve.renderResourceCollection" (dict "root" $ "items" .Values.clusterServingRuntimes "resourceKey" "clusterServingRuntimes" "defaultApiVersion" $.Values.apiVersions.clusterServingRuntime "kind" "ClusterServingRuntime" "namespaced" false) }}

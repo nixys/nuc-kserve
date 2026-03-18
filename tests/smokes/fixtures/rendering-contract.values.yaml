@@ -17,7 +17,7 @@ apiVersions:
   trainedModel: serving.kserve.io/v1alpha1
 
 clusterServingRuntimes:
-  - name: cluster-runtime
+  cluster-runtime:
     labels:
       component: runtime
     annotations:
@@ -30,7 +30,7 @@ clusterServingRuntimes:
           image: example/runtime:latest
 
 inferenceServices:
-  - name: merged-inferenceservice
+  merged-inferenceservice:
     labels:
       component: inference-service
       tier: online

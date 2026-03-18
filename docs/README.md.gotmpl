@@ -44,7 +44,7 @@ The chart can render these KServe kinds:
 
 ## Values Model
 
-Each top-level list in [values.yaml](values.yaml) maps to one resource kind:
+Each top-level map in [values.yaml](values.yaml) maps to one resource kind:
 
 - `clusterServingRuntimes`
 - `clusterStorageContainers`
@@ -56,12 +56,11 @@ Each top-level list in [values.yaml](values.yaml) maps to one resource kind:
 - `servingRuntimes`
 - `trainedModels`
 
-Every list item uses the same generic contract:
+Every map value uses the same generic contract, and the resource name comes from the map key:
 
 | Field | Required | Description |
 |-------|----------|-------------|
 | `enabled` | no | Set to `false` to keep a documented stub entry from rendering. |
-| `name` | yes | Resource name. |
 | `namespace` | no | Namespace for namespaced resources. Defaults to the Helm release namespace. Ignored for cluster-scoped kinds. |
 | `labels` | no | Labels merged on top of built-in chart labels and `commonLabels`. |
 | `annotations` | no | Annotations merged on top of `commonAnnotations`. |

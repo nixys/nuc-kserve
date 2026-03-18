@@ -26,25 +26,24 @@ apiVersions:
   # -- Default apiVersion for TrainedModel resources.
   trainedModel: serving.kserve.io/v1alpha1
 
-# Each list item supports:
+# Each map entry supports:
 # - enabled: optional, defaults to true
-# - name: required when enabled
 # - namespace: optional for namespaced resources, defaults to the release namespace
 # - labels: optional
 # - annotations: optional
 # - apiVersion: optional override for a single resource
 # - spec: arbitrary resource spec
 # - status: optional raw status block for fixtures and synthetic manifests
+# Resource names come from the map keys.
 #
 # The disabled entries below are documentation stubs for helm-docs. They keep the
 # nested shape visible in the generated README while the default chart render stays empty.
 
-# -- ClusterServingRuntime resources to render.
+# -- ClusterServingRuntime resources to render, keyed by resource name.
 clusterServingRuntimes:
-  - # -- Set to `true` to render this resource.
+  example-clusterservingruntime:
+    # -- Set to `true` to render this resource.
     enabled: false
-    # -- Resource name.
-    name: example-clusterservingruntime
     # -- Additional resource labels.
     labels: {}
     # -- Additional resource annotations.
@@ -77,12 +76,11 @@ clusterServingRuntimes:
     # -- Optional synthetic status payload.
     status: {}
 
-# -- ClusterStorageContainer resources to render.
+# -- ClusterStorageContainer resources to render, keyed by resource name.
 clusterStorageContainers:
-  - # -- Set to `true` to render this resource.
+  example-clusterstoragecontainer:
+    # -- Set to `true` to render this resource.
     enabled: false
-    # -- Resource name.
-    name: example-clusterstoragecontainer
     labels: {}
     annotations: {}
     apiVersion: serving.kserve.io/v1alpha1
@@ -103,12 +101,11 @@ clusterStorageContainers:
       workloadType: initContainer
     status: {}
 
-# -- InferenceGraph resources to render.
+# -- InferenceGraph resources to render, keyed by resource name.
 inferenceGraphs:
-  - # -- Set to `true` to render this resource.
+  example-inferencegraph:
+    # -- Set to `true` to render this resource.
     enabled: false
-    # -- Resource name.
-    name: example-inferencegraph
     # -- Resource namespace. Defaults to the Helm release namespace.
     namespace: default
     labels: {}
@@ -127,12 +124,11 @@ inferenceGraphs:
               data: $request
     status: {}
 
-# -- InferenceService resources to render.
+# -- InferenceService resources to render, keyed by resource name.
 inferenceServices:
-  - # -- Set to `true` to render this resource.
+  example-inferenceservice:
+    # -- Set to `true` to render this resource.
     enabled: false
-    # -- Resource name.
-    name: example-inferenceservice
     # -- Resource namespace. Defaults to the Helm release namespace.
     namespace: default
     labels: {}
@@ -145,12 +141,11 @@ inferenceServices:
           storageUri: s3://models/sklearn
     status: {}
 
-# -- LocalModelCache resources to render.
+# -- LocalModelCache resources to render, keyed by resource name.
 localModelCaches:
-  - # -- Set to `true` to render this resource.
+  example-localmodelcache:
+    # -- Set to `true` to render this resource.
     enabled: false
-    # -- Resource name.
-    name: example-localmodelcache
     labels: {}
     annotations: {}
     apiVersion: serving.kserve.io/v1alpha1
@@ -164,12 +159,11 @@ localModelCaches:
       sourceModelUri: s3://models/example
     status: {}
 
-# -- LocalModelNodeGroup resources to render.
+# -- LocalModelNodeGroup resources to render, keyed by resource name.
 localModelNodeGroups:
-  - # -- Set to `true` to render this resource.
+  example-localmodelnodegroup:
+    # -- Set to `true` to render this resource.
     enabled: false
-    # -- Resource name.
-    name: example-localmodelnodegroup
     labels: {}
     annotations: {}
     apiVersion: serving.kserve.io/v1alpha1
@@ -200,12 +194,11 @@ localModelNodeGroups:
       storageLimit: 100Gi
     status: {}
 
-# -- LocalModelNode resources to render.
+# -- LocalModelNode resources to render, keyed by resource name.
 localModelNodes:
-  - # -- Set to `true` to render this resource.
+  example-localmodelnode:
+    # -- Set to `true` to render this resource.
     enabled: false
-    # -- Resource name.
-    name: example-localmodelnode
     labels: {}
     annotations: {}
     apiVersion: serving.kserve.io/v1alpha1
@@ -219,12 +212,11 @@ localModelNodes:
           sourceModelUri: s3://models/example
     status: {}
 
-# -- ServingRuntime resources to render.
+# -- ServingRuntime resources to render, keyed by resource name.
 servingRuntimes:
-  - # -- Set to `true` to render this resource.
+  example-servingruntime:
+    # -- Set to `true` to render this resource.
     enabled: false
-    # -- Resource name.
-    name: example-servingruntime
     # -- Resource namespace. Defaults to the Helm release namespace.
     namespace: default
     labels: {}
@@ -251,12 +243,11 @@ servingRuntimes:
             - --model_dir=/mnt/models
     status: {}
 
-# -- TrainedModel resources to render.
+# -- TrainedModel resources to render, keyed by resource name.
 trainedModels:
-  - # -- Set to `true` to render this resource.
+  example-trainedmodel:
+    # -- Set to `true` to render this resource.
     enabled: false
-    # -- Resource name.
-    name: example-trainedmodel
     # -- Resource namespace. Defaults to the Helm release namespace.
     namespace: default
     labels: {}
