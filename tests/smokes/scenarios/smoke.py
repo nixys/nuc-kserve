@@ -207,6 +207,10 @@ SCENARIOS: list[tuple[str, Callable[[SmokeContext], None]]] = [
     ("example-kubeconform", check_example_kubeconform),
 ]
 
+SCENARIO_ALIASES = {
+    "schema-invalid-missing-name": "schema-invalid-empty-resource-key",
+}
+
 
 def run_smoke_suite(args) -> int:
     scenario_map = dict(SCENARIOS)
@@ -214,7 +218,7 @@ def run_smoke_suite(args) -> int:
     if "all" in requested:
         selected = [name for name, _ in SCENARIOS]
     else:
-        selected = requested
+        selected = [SCENARIO_ALIASES.get(name, name) for name in requested]
 
     repo_root = Path(args.chart_dir).resolve()
     workdir, chart_dir = chart.stage_chart(repo_root, args.workdir)
