@@ -1,3 +1,9 @@
+include:
+  - project: "apps/nuc-subcharts/gitlab-ci"
+    ref: "main"
+    file:
+      - "/publish-subchart.gitlab-ci.yml"
+
 stages:
   - lint
   - unit-tests
@@ -5,11 +11,19 @@ stages:
   - compatibility-tests
   - render
 
+  - validate-tag
+  - package
+  - publish
+
 variables:
   CHART_DIR: "."
   RELEASE_NAME: "nuc-release"
   RELEASE_NAMESPACE: "default"
   HELM_EXAMPLE_VALUES: "values.yaml.example"
+
+  CHART_PATH: "./"
+  HARBOR_REGISTRY: $REGISTRY_NAME
+  HARBOR_PROJECT: "public"
 
 default:
   image:
