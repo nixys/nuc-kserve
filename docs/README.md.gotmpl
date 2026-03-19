@@ -1,0 +1,108 @@
+# NUC KServe
+
+Helm chart for rendering KServe custom resources from declarative values.
+
+The chart does not install KServe CRDs or controllers. It only renders KServe objects that are already supported by the target cluster.
+
+## Quick Start
+
+Render the example configuration:
+
+```bash
+helm template nuc-kserve . -f values.yaml.example
+```
+
+Install the chart:
+
+```bash
+helm install nuc-kserve . \
+  --namespace kserve \
+  --create-namespace \
+  -f values.yaml.example
+```
+
+Install the local README generator hook:
+
+```bash
+pre-commit install
+pre-commit install-hooks
+```
+
+## Supported Resources
+
+The chart can render these KServe kinds:
+
+- `ClusterServingRuntime`
+- `ClusterStorageContainer`
+- `InferenceGraph`
+- `InferenceService`
+- `LocalModelCache`
+- `LocalModelNodeGroup`
+- `LocalModelNode`
+- `ServingRuntime`
+- `TrainedModel`
+
+## Values Model
+
+Each top-level map in [values.yaml](values.yaml) maps to one resource kind:
+
+- `clusterServingRuntimes`
+- `clusterStorageContainers`
+- `inferenceGraphs`
+- `inferenceServices`
+- `localModelCaches`
+- `localModelNodeGroups`
+- `localModelNodes`
+- `servingRuntimes`
+- `trainedModels`
+
+Every map value uses the same generic contract, and the resource name comes from the map key:
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `enabled` | no | Set to `false` to keep a documented stub entry from rendering. |
+| `namespace` | no | Namespace for namespaced resources. Defaults to the Helm release namespace. Ignored for cluster-scoped kinds. |
+| `labels` | no | Labels merged on top of built-in chart labels and `commonLabels`. |
+| `annotations` | no | Annotations merged on top of `commonAnnotations`. |
+| `apiVersion` | no | Per-resource API version override. |
+| `spec` | no | Raw resource spec rendered as-is. |
+| `status` | no | Optional raw status block. Usually useful only for fixtures. |
+
+Global controls:
+
+- `nameOverride`
+- `commonLabels`
+- `commonAnnotations`
+- `apiVersions.*`
+
+The value contract is validated by [values.schema.json](values.schema.json).
+
+## Helm Values
+
+This section is generated from [values.yaml](values.yaml) by `helm-docs`. Edit [values.yaml](values.yaml) comments or [docs/README.md.gotmpl](docs/README.md.gotmpl), then run `pre-commit run helm-docs --all-files` or `make docs` if you need to refresh it outside a commit.
+
+{{ template "chart.valuesTable" . }}
+
+## Included Values Files
+
+- [values.yaml](values.yaml): minimal defaults that render no resources.
+- [values.yaml.example](values.yaml.example): example configuration covering every supported resource type.
+
+## Testing
+
+The repository uses three test layers:
+
+- `tests/units/` for `helm-unittest` suites and backward compatibility checks
+- `tests/e2e/` for local kind-based Helm install checks after bootstrapping KServe CRDs from vendored upstream manifests
+- `tests/smokes/` for render and schema smoke scenarios
+
+Representative local commands:
+
+```bash
+helm lint . -f values.yaml.example
+helm template nuc-kserve . -f values.yaml.example
+helm unittest -f 'tests/units/*_test.yaml' .
+sh tests/units/backward_compatibility_test.sh
+python3 tests/smokes/run/smoke.py --scenario example-render
+make test-e2e
+```

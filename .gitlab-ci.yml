@@ -1,0 +1,81 @@
+include:
+  - project: "apps/nuc-subcharts/gitlab-ci"
+    ref: "main"
+    file:
+      - "/publish-subchart.gitlab-ci.yml"
+
+stages:
+  - lint
+  - unit-tests
+  - smoke-tests
+  - compatibility-tests
+  - render
+
+  - validate-tag
+  - package
+  - publish
+
+variables:
+  CHART_DIR: "."
+  RELEASE_NAME: "nuc-release"
+  RELEASE_NAMESPACE: "default"
+  HELM_EXAMPLE_VALUES: "values.yaml.example"
+
+  CHART_PATH: "./"
+  HARBOR_REGISTRY: $REGISTRY_NAME
+  HARBOR_PROJECT: "public"
+
+default:
+  image:
+    name: alpine/helm:4
+    entrypoint: ["/bin/sh", "-c"]
+
+lint:
+  stage: lint
+  script:
+    - helm lint . -f values.yaml.example
+
+unit_tests:
+  stage: unit-tests
+  script:
+    - helm plugin install https://github.com/helm-unittest/helm-unittest.git --verify=false
+    - helm unittest -f 'tests/units/*_test.yaml' .
+
+smoke_tests:
+  stage: smoke-tests
+  before_script:
+    - apk add --no-cache curl python3 py3-yaml
+  script:
+    - >
+      python3 tests/smokes/run/smoke.py
+      --scenario default-empty
+      --scenario schema-invalid-missing-name
+      --scenario rendering-contract
+      --scenario example-render
+
+compatibility_tests:
+  stage: compatibility-tests
+  variables:
+    GIT_DEPTH: "0"
+  before_script:
+    - apk add --no-cache git
+    - git fetch --tags --force
+  script:
+    - sh tests/units/backward_compatibility_test.sh
+
+render_manifests:
+  stage: render
+  script:
+    - mkdir -p .rendered
+    - >
+      helm template
+      "$RELEASE_NAME"
+      "$CHART_DIR"
+      --namespace "$RELEASE_NAMESPACE"
+      -f "$HELM_EXAMPLE_VALUES"
+      > .rendered/all.yaml
+    - test -s .rendered/all.yaml
+  artifacts:
+    when: always
+    paths:
+      - .rendered/

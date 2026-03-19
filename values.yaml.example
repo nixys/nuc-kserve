@@ -1,0 +1,156 @@
+# Example values for all supported KServe resources in this chart.
+# Render with:
+#   helm template nuc-kserve . -f values.yaml.example
+
+nameOverride: ""
+
+commonLabels:
+  platform: kserve
+commonAnnotations:
+  team: ml-platform
+
+apiVersions:
+  clusterServingRuntime: serving.kserve.io/v1alpha1
+  clusterStorageContainer: serving.kserve.io/v1alpha1
+  inferenceGraph: serving.kserve.io/v1alpha1
+  inferenceService: serving.kserve.io/v1beta1
+  localModelCache: serving.kserve.io/v1alpha1
+  localModelNodeGroup: serving.kserve.io/v1alpha1
+  localModelNode: serving.kserve.io/v1alpha1
+  servingRuntime: serving.kserve.io/v1alpha1
+  trainedModel: serving.kserve.io/v1alpha1
+
+clusterServingRuntimes:
+  sklearn-cluster-runtime:
+    labels:
+      component: runtime
+    annotations:
+      serving.kserve.io/server-type: sklearnserver
+    spec:
+      supportedModelFormats:
+        - name: sklearn
+          version: "1"
+          autoSelect: true
+          priority: 1
+      protocolVersions:
+        - v1
+        - v2
+      containers:
+        - name: kserve-container
+          image: kserve/custom-model:latest
+          args:
+            - --model_name={{.Name}}
+            - --model_dir=/mnt/models
+
+clusterStorageContainers:
+  default-storage:
+    labels:
+      component: storage
+    spec:
+      container:
+        name: storage-initializer
+        image: kserve/storage-initializer:latest
+        imagePullPolicy: IfNotPresent
+      supportedUriFormats:
+        - prefix: gs://
+        - prefix: s3://
+        - regex: "https?://(.+)/(.+)"
+      workloadType: initContainer
+
+inferenceGraphs:
+  model-chain:
+    namespace: ml-platform
+    labels:
+      component: graph
+    spec:
+      nodes:
+        root:
+          routerType: Sequence
+          steps:
+            - serviceName: sklearn-iris
+            - serviceName: xgboost-iris
+              data: $request
+
+inferenceServices:
+  sklearn-iris:
+    namespace: ml-platform
+    labels:
+      component: inference-service
+    annotations:
+      note: example
+    spec:
+      predictor:
+        sklearn:
+          storageUri: gs://kfserving-examples/models/sklearn/1.0/model
+
+localModelCaches:
+  bert-cache:
+    labels:
+      component: localmodel-cache
+    spec:
+      modelSize: 10Gi
+      nodeGroups:
+        - ssd-cache-group
+      sourceModelUri: s3://models/bert-base
+
+localModelNodeGroups:
+  ssd-cache-group:
+    labels:
+      component: localmodel-node-group
+    spec:
+      persistentVolumeClaimSpec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 20Gi
+        storageClassName: standard
+      persistentVolumeSpec:
+        accessModes:
+          - ReadWriteOnce
+        capacity:
+          storage: 20Gi
+        hostPath:
+          path: /var/lib/kserve/localmodel
+        persistentVolumeReclaimPolicy: Delete
+      storageLimit: 100Gi
+
+localModelNodes:
+  worker-cache-01:
+    labels:
+      component: localmodel-node
+    spec:
+      localModels:
+        - modelName: bert-base
+          nodeGroup: ssd-cache-group
+          sourceModelUri: s3://models/bert-base
+
+servingRuntimes:
+  sklearn-runtime:
+    namespace: ml-platform
+    labels:
+      component: serving-runtime
+    spec:
+      supportedModelFormats:
+        - name: sklearn
+          version: "1"
+          autoSelect: true
+          priority: 1
+      containers:
+        - name: kserve-container
+          image: kserve/custom-model:latest
+          args:
+            - --model_name={{.Name}}
+            - --model_dir=/mnt/models
+
+trainedModels:
+  sklearn-iris-v1:
+    namespace: ml-platform
+    labels:
+      component: trained-model
+    spec:
+      inferenceService: sklearn-iris
+      model:
+        framework: sklearn
+        memory: 2Gi
+        storageUri: gs://kfserving-examples/models/sklearn/1.0/model

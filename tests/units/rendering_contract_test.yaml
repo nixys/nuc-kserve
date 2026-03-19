@@ -1,0 +1,89 @@
+suite: rendering contract
+templates:
+  - templates/inferenceservice.yaml
+  - templates/clusterservingruntime.yaml
+release:
+  name: unit-test
+  namespace: unit-namespace
+
+tests:
+  - it: renders no InferenceService documents by default
+    template: templates/inferenceservice.yaml
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders no ClusterServingRuntime documents by default
+    template: templates/clusterservingruntime.yaml
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: applies helper defaults and overrides for namespaced resources
+    values:
+      - values/rendering_contract.values.yaml
+    template: templates/inferenceservice.yaml
+    documentSelector:
+      path: metadata.name
+      value: merged-inferenceservice
+    asserts:
+      - isKind:
+          of: InferenceService
+      - equal:
+          path: apiVersion
+          value: serving.kserve.io/v1beta1
+      - equal:
+          path: metadata.namespace
+          value: unit-namespace
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: kserve-platform
+      - equal:
+          path: metadata.labels.platform
+          value: kserve
+      - equal:
+          path: metadata.labels.component
+          value: inference-service
+      - equal:
+          path: metadata.labels.tier
+          value: online
+      - equal:
+          path: metadata.annotations.team
+          value: platform
+      - equal:
+          path: metadata.annotations.note
+          value: canary
+      - equal:
+          path: spec.predictor.sklearn.storageUri
+          value: s3://models/sklearn
+
+  - it: renders cluster-scoped resources without namespace and with configured apiVersion
+    values:
+      - values/rendering_contract.values.yaml
+    template: templates/clusterservingruntime.yaml
+    documentSelector:
+      path: metadata.name
+      value: cluster-runtime
+    asserts:
+      - isKind:
+          of: ClusterServingRuntime
+      - equal:
+          path: apiVersion
+          value: example.net/v1alpha1
+      - notExists:
+          path: metadata.namespace
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: kserve-platform
+      - equal:
+          path: metadata.labels.component
+          value: runtime
+      - equal:
+          path: metadata.annotations.team
+          value: platform
+      - equal:
+          path: metadata.annotations.note
+          value: autosync
+      - equal:
+          path: spec.supportedModelFormats[0].name
+          value: sklearn

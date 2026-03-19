@@ -1,93 +1,190 @@
 # NUC KServe
 
+Helm chart for rendering KServe custom resources from declarative values.
 
+The chart does not install KServe CRDs or controllers. It only renders KServe objects that are already supported by the target cluster.
 
-## Getting started
+## Quick Start
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+Render the example configuration:
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://git.nixys.ru/apps/nuc-subcharts/nuc-kserve.git
-git branch -M main
-git push -uf origin main
+```bash
+helm template nuc-kserve . -f values.yaml.example
 ```
 
-## Integrate with your tools
+Install the chart:
 
-- [ ] [Set up project integrations](https://git.nixys.ru/apps/nuc-subcharts/nuc-kserve/-/settings/integrations)
+```bash
+helm install nuc-kserve . \
+  --namespace kserve \
+  --create-namespace \
+  -f values.yaml.example
+```
 
-## Collaborate with your team
+Install the local README generator hook:
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+```bash
+pre-commit install
+pre-commit install-hooks
+```
 
-## Test and Deploy
+## Supported Resources
 
-Use the built-in continuous integration in GitLab.
+The chart can render these KServe kinds:
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+- `ClusterServingRuntime`
+- `ClusterStorageContainer`
+- `InferenceGraph`
+- `InferenceService`
+- `LocalModelCache`
+- `LocalModelNodeGroup`
+- `LocalModelNode`
+- `ServingRuntime`
+- `TrainedModel`
 
-***
+## Values Model
 
-# Editing this README
+Each top-level map in [values.yaml](values.yaml) maps to one resource kind:
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+- `clusterServingRuntimes`
+- `clusterStorageContainers`
+- `inferenceGraphs`
+- `inferenceServices`
+- `localModelCaches`
+- `localModelNodeGroups`
+- `localModelNodes`
+- `servingRuntimes`
+- `trainedModels`
 
-## Suggestions for a good README
+Every map value uses the same generic contract, and the resource name comes from the map key:
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+| Field | Required | Description |
+|-------|----------|-------------|
+| `enabled` | no | Set to `false` to keep a documented stub entry from rendering. |
+| `namespace` | no | Namespace for namespaced resources. Defaults to the Helm release namespace. Ignored for cluster-scoped kinds. |
+| `labels` | no | Labels merged on top of built-in chart labels and `commonLabels`. |
+| `annotations` | no | Annotations merged on top of `commonAnnotations`. |
+| `apiVersion` | no | Per-resource API version override. |
+| `spec` | no | Raw resource spec rendered as-is. |
+| `status` | no | Optional raw status block. Usually useful only for fixtures. |
 
-## Name
-Choose a self-explaining name for your project.
+Global controls:
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+- `nameOverride`
+- `commonLabels`
+- `commonAnnotations`
+- `apiVersions.*`
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+The value contract is validated by [values.schema.json](values.schema.json).
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+## Helm Values
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+This section is generated from [values.yaml](values.yaml) by `helm-docs`. Edit [values.yaml](values.yaml) comments or [docs/README.md.gotmpl](docs/README.md.gotmpl), then run `pre-commit run helm-docs --all-files` or `make docs` if you need to refresh it outside a commit.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| apiVersions.clusterServingRuntime | string | `"serving.kserve.io/v1alpha1"` | Default apiVersion for ClusterServingRuntime resources. |
+| apiVersions.clusterStorageContainer | string | `"serving.kserve.io/v1alpha1"` | Default apiVersion for ClusterStorageContainer resources. |
+| apiVersions.inferenceGraph | string | `"serving.kserve.io/v1alpha1"` | Default apiVersion for InferenceGraph resources. |
+| apiVersions.inferenceService | string | `"serving.kserve.io/v1beta1"` | Default apiVersion for InferenceService resources. |
+| apiVersions.localModelCache | string | `"serving.kserve.io/v1alpha1"` | Default apiVersion for LocalModelCache resources. |
+| apiVersions.localModelNode | string | `"serving.kserve.io/v1alpha1"` | Default apiVersion for LocalModelNode resources. |
+| apiVersions.localModelNodeGroup | string | `"serving.kserve.io/v1alpha1"` | Default apiVersion for LocalModelNodeGroup resources. |
+| apiVersions.servingRuntime | string | `"serving.kserve.io/v1alpha1"` | Default apiVersion for ServingRuntime resources. |
+| apiVersions.trainedModel | string | `"serving.kserve.io/v1alpha1"` | Default apiVersion for TrainedModel resources. |
+| clusterServingRuntimes | object | `{"example-clusterservingruntime":{"annotations":{},"apiVersion":"serving.kserve.io/v1alpha1","enabled":false,"labels":{},"spec":{"containers":[{"args":["--model_name={{.Name}}","--model_dir=/mnt/models"],"image":"example/runtime:latest","name":"kserve-container"}],"protocolVersions":["v1","v2"],"supportedModelFormats":[{"autoSelect":true,"name":"sklearn","priority":1,"version":"1"}]},"status":{}}}` | ClusterServingRuntime resources to render, keyed by resource name. |
+| clusterServingRuntimes.example-clusterservingruntime.annotations | object | `{}` | Additional resource annotations. |
+| clusterServingRuntimes.example-clusterservingruntime.apiVersion | string | `"serving.kserve.io/v1alpha1"` | Per-resource apiVersion override. |
+| clusterServingRuntimes.example-clusterservingruntime.enabled | bool | `false` | Set to `true` to render this resource. |
+| clusterServingRuntimes.example-clusterservingruntime.labels | object | `{}` | Additional resource labels. |
+| clusterServingRuntimes.example-clusterservingruntime.spec.containers[0].args | list | `["--model_name={{.Name}}","--model_dir=/mnt/models"]` | Runtime container arguments. |
+| clusterServingRuntimes.example-clusterservingruntime.spec.containers[0].image | string | `"example/runtime:latest"` | Runtime container image. |
+| clusterServingRuntimes.example-clusterservingruntime.spec.containers[0].name | string | `"kserve-container"` | Runtime container name. |
+| clusterServingRuntimes.example-clusterservingruntime.spec.protocolVersions | list | `["v1","v2"]` | Supported inference protocol versions. |
+| clusterServingRuntimes.example-clusterservingruntime.spec.supportedModelFormats[0].autoSelect | bool | `true` | Mark this format for autoselection. |
+| clusterServingRuntimes.example-clusterservingruntime.spec.supportedModelFormats[0].name | string | `"sklearn"` | Supported model format name. |
+| clusterServingRuntimes.example-clusterservingruntime.spec.supportedModelFormats[0].priority | int | `1` | Priority used when multiple runtimes support the same format. |
+| clusterServingRuntimes.example-clusterservingruntime.spec.supportedModelFormats[0].version | string | `"1"` | Supported model format version. |
+| clusterServingRuntimes.example-clusterservingruntime.status | object | `{}` | Optional synthetic status payload. |
+| clusterStorageContainers | object | `{"example-clusterstoragecontainer":{"annotations":{},"apiVersion":"serving.kserve.io/v1alpha1","enabled":false,"labels":{},"spec":{"container":{"image":"example/storage-initializer:latest","imagePullPolicy":"IfNotPresent","name":"storage-initializer"},"supportedUriFormats":[{"prefix":"s3://"},{"regex":"https?://(.+)/(.+)"}],"workloadType":"initContainer"},"status":{}}}` | ClusterStorageContainer resources to render, keyed by resource name. |
+| clusterStorageContainers.example-clusterstoragecontainer.enabled | bool | `false` | Set to `true` to render this resource. |
+| clusterStorageContainers.example-clusterstoragecontainer.spec.container.image | string | `"example/storage-initializer:latest"` | Storage initializer image. |
+| clusterStorageContainers.example-clusterstoragecontainer.spec.container.imagePullPolicy | string | `"IfNotPresent"` | Image pull policy for the storage initializer. |
+| clusterStorageContainers.example-clusterstoragecontainer.spec.container.name | string | `"storage-initializer"` | Storage initializer container name. |
+| clusterStorageContainers.example-clusterstoragecontainer.spec.supportedUriFormats[0].prefix | string | `"s3://"` | URI prefix handled by this storage container. |
+| clusterStorageContainers.example-clusterstoragecontainer.spec.supportedUriFormats[1].regex | string | `"https?://(.+)/(.+)"` | URI regex handled by this storage container. |
+| clusterStorageContainers.example-clusterstoragecontainer.spec.workloadType | string | `"initContainer"` | Workload type used by the storage container. |
+| commonAnnotations | object | `{}` | Extra annotations applied to every rendered resource. |
+| commonLabels | object | `{}` | Extra labels applied to every rendered resource. |
+| inferenceGraphs | object | `{"example-inferencegraph":{"annotations":{},"apiVersion":"serving.kserve.io/v1alpha1","enabled":false,"labels":{},"namespace":"default","spec":{"nodes":{"root":{"routerType":"Sequence","steps":[{"serviceName":"predictor-a"},{"data":"$request","serviceName":"predictor-b"}]}}},"status":{}}}` | InferenceGraph resources to render, keyed by resource name. |
+| inferenceGraphs.example-inferencegraph.enabled | bool | `false` | Set to `true` to render this resource. |
+| inferenceGraphs.example-inferencegraph.namespace | string | `"default"` | Resource namespace. Defaults to the Helm release namespace. |
+| inferenceGraphs.example-inferencegraph.spec.nodes.root.routerType | string | `"Sequence"` | Router strategy used by the root node. |
+| inferenceGraphs.example-inferencegraph.spec.nodes.root.steps[0].serviceName | string | `"predictor-a"` | Downstream service name for a graph step. |
+| inferenceGraphs.example-inferencegraph.spec.nodes.root.steps[1].data | string | `"$request"` | Optional payload source for the next step. |
+| inferenceServices | object | `{"example-inferenceservice":{"annotations":{},"apiVersion":"serving.kserve.io/v1beta1","enabled":false,"labels":{},"namespace":"default","spec":{"predictor":{"sklearn":{"storageUri":"s3://models/sklearn"}}},"status":{}}}` | InferenceService resources to render, keyed by resource name. |
+| inferenceServices.example-inferenceservice.enabled | bool | `false` | Set to `true` to render this resource. |
+| inferenceServices.example-inferenceservice.namespace | string | `"default"` | Resource namespace. Defaults to the Helm release namespace. |
+| inferenceServices.example-inferenceservice.spec.predictor.sklearn.storageUri | string | `"s3://models/sklearn"` | Model storage URI for the built-in sklearn predictor. |
+| localModelCaches | object | `{"example-localmodelcache":{"annotations":{},"apiVersion":"serving.kserve.io/v1alpha1","enabled":false,"labels":{},"spec":{"modelSize":"10Gi","nodeGroups":["example-node-group"],"sourceModelUri":"s3://models/example"},"status":{}}}` | LocalModelCache resources to render, keyed by resource name. |
+| localModelCaches.example-localmodelcache.enabled | bool | `false` | Set to `true` to render this resource. |
+| localModelCaches.example-localmodelcache.spec.modelSize | string | `"10Gi"` | Estimated cached model size. |
+| localModelCaches.example-localmodelcache.spec.nodeGroups | list | `["example-node-group"]` | Target LocalModelNodeGroup names. |
+| localModelCaches.example-localmodelcache.spec.sourceModelUri | string | `"s3://models/example"` | Source model URI. |
+| localModelNodeGroups | object | `{"example-localmodelnodegroup":{"annotations":{},"apiVersion":"serving.kserve.io/v1alpha1","enabled":false,"labels":{},"spec":{"persistentVolumeClaimSpec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"20Gi"}},"storageClassName":"standard"},"persistentVolumeSpec":{"accessModes":["ReadWriteOnce"],"capacity":{"storage":"20Gi"},"hostPath":{"path":"/var/lib/kserve/localmodel"},"persistentVolumeReclaimPolicy":"Delete"},"storageLimit":"100Gi"},"status":{}}}` | LocalModelNodeGroup resources to render, keyed by resource name. |
+| localModelNodeGroups.example-localmodelnodegroup.enabled | bool | `false` | Set to `true` to render this resource. |
+| localModelNodeGroups.example-localmodelnodegroup.spec.persistentVolumeClaimSpec.accessModes | list | `["ReadWriteOnce"]` | PersistentVolumeClaim access modes. |
+| localModelNodeGroups.example-localmodelnodegroup.spec.persistentVolumeClaimSpec.resources.requests.storage | string | `"20Gi"` | Requested PVC storage size. |
+| localModelNodeGroups.example-localmodelnodegroup.spec.persistentVolumeClaimSpec.storageClassName | string | `"standard"` | PVC storage class name. |
+| localModelNodeGroups.example-localmodelnodegroup.spec.persistentVolumeSpec.accessModes | list | `["ReadWriteOnce"]` | Backing PersistentVolume access modes. |
+| localModelNodeGroups.example-localmodelnodegroup.spec.persistentVolumeSpec.capacity.storage | string | `"20Gi"` | Backing PersistentVolume storage size. |
+| localModelNodeGroups.example-localmodelnodegroup.spec.persistentVolumeSpec.hostPath.path | string | `"/var/lib/kserve/localmodel"` | Host path used by the backing PersistentVolume. |
+| localModelNodeGroups.example-localmodelnodegroup.spec.persistentVolumeSpec.persistentVolumeReclaimPolicy | string | `"Delete"` | Reclaim policy for the backing PersistentVolume. |
+| localModelNodeGroups.example-localmodelnodegroup.spec.storageLimit | string | `"100Gi"` | Maximum aggregate storage allowed for the node group. |
+| localModelNodes | object | `{"example-localmodelnode":{"annotations":{},"apiVersion":"serving.kserve.io/v1alpha1","enabled":false,"labels":{},"spec":{"localModels":[{"modelName":"example-model","nodeGroup":"example-node-group","sourceModelUri":"s3://models/example"}]},"status":{}}}` | LocalModelNode resources to render, keyed by resource name. |
+| localModelNodes.example-localmodelnode.enabled | bool | `false` | Set to `true` to render this resource. |
+| localModelNodes.example-localmodelnode.spec.localModels[0].modelName | string | `"example-model"` | Logical model name stored on the node. |
+| localModelNodes.example-localmodelnode.spec.localModels[0].nodeGroup | string | `"example-node-group"` | Target node group for this local model. |
+| localModelNodes.example-localmodelnode.spec.localModels[0].sourceModelUri | string | `"s3://models/example"` | Source model URI for this local model. |
+| nameOverride | string | `""` | Override the default chart label name if needed. |
+| servingRuntimes | object | `{"example-servingruntime":{"annotations":{},"apiVersion":"serving.kserve.io/v1alpha1","enabled":false,"labels":{},"namespace":"default","spec":{"containers":[{"args":["--model_name={{.Name}}","--model_dir=/mnt/models"],"image":"example/runtime:latest","name":"kserve-container"}],"supportedModelFormats":[{"autoSelect":true,"name":"sklearn","priority":1,"version":"1"}]},"status":{}}}` | ServingRuntime resources to render, keyed by resource name. |
+| servingRuntimes.example-servingruntime.enabled | bool | `false` | Set to `true` to render this resource. |
+| servingRuntimes.example-servingruntime.namespace | string | `"default"` | Resource namespace. Defaults to the Helm release namespace. |
+| servingRuntimes.example-servingruntime.spec.containers[0].args | list | `["--model_name={{.Name}}","--model_dir=/mnt/models"]` | Runtime container arguments. |
+| servingRuntimes.example-servingruntime.spec.containers[0].image | string | `"example/runtime:latest"` | Runtime container image. |
+| servingRuntimes.example-servingruntime.spec.containers[0].name | string | `"kserve-container"` | Runtime container name. |
+| servingRuntimes.example-servingruntime.spec.supportedModelFormats[0].autoSelect | bool | `true` | Mark this format for autoselection. |
+| servingRuntimes.example-servingruntime.spec.supportedModelFormats[0].name | string | `"sklearn"` | Supported model format name. |
+| servingRuntimes.example-servingruntime.spec.supportedModelFormats[0].priority | int | `1` | Priority used when multiple runtimes support the same format. |
+| servingRuntimes.example-servingruntime.spec.supportedModelFormats[0].version | string | `"1"` | Supported model format version. |
+| trainedModels | object | `{"example-trainedmodel":{"annotations":{},"apiVersion":"serving.kserve.io/v1alpha1","enabled":false,"labels":{},"namespace":"default","spec":{"inferenceService":"example-inferenceservice","model":{"framework":"sklearn","memory":"2Gi","storageUri":"s3://models/sklearn"}},"status":{}}}` | TrainedModel resources to render, keyed by resource name. |
+| trainedModels.example-trainedmodel.enabled | bool | `false` | Set to `true` to render this resource. |
+| trainedModels.example-trainedmodel.namespace | string | `"default"` | Resource namespace. Defaults to the Helm release namespace. |
+| trainedModels.example-trainedmodel.spec.inferenceService | string | `"example-inferenceservice"` | Target InferenceService name. |
+| trainedModels.example-trainedmodel.spec.model.framework | string | `"sklearn"` | Model framework identifier. |
+| trainedModels.example-trainedmodel.spec.model.memory | string | `"2Gi"` | Memory request associated with the trained model. |
+| trainedModels.example-trainedmodel.spec.model.storageUri | string | `"s3://models/sklearn"` | Model storage URI. |
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+## Included Values Files
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+- [values.yaml](values.yaml): minimal defaults that render no resources.
+- [values.yaml.example](values.yaml.example): example configuration covering every supported resource type.
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+## Testing
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+The repository uses three test layers:
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+- `tests/units/` for `helm-unittest` suites and backward compatibility checks
+- `tests/e2e/` for local kind-based Helm install checks after bootstrapping KServe CRDs from vendored upstream manifests
+- `tests/smokes/` for render and schema smoke scenarios
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+Representative local commands:
 
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+```bash
+helm lint . -f values.yaml.example
+helm template nuc-kserve . -f values.yaml.example
+helm unittest -f 'tests/units/*_test.yaml' .
+sh tests/units/backward_compatibility_test.sh
+python3 tests/smokes/run/smoke.py --scenario example-render
+make test-e2e
+```
