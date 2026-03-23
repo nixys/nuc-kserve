@@ -70,10 +70,12 @@ Every map value uses the same generic contract, and the resource name comes from
 
 Global controls:
 
+- `enabled`
 - `nameOverride`
 - `commonLabels`
 - `commonAnnotations`
 - `apiVersions.*`
+- `global` (accepted for umbrella-chart compatibility and ignored by templates)
 
 The value contract is validated by [values.schema.json](values.schema.json).
 
@@ -116,6 +118,8 @@ This section is generated from [values.yaml](values.yaml) by `helm-docs`. Edit [
 | clusterStorageContainers.example-clusterstoragecontainer.spec.workloadType | string | `"initContainer"` | Workload type used by the storage container. |
 | commonAnnotations | object | `{}` | Extra annotations applied to every rendered resource. |
 | commonLabels | object | `{}` | Extra labels applied to every rendered resource. |
+| enabled | bool | `true` | Enable nuc-kserve chart rendering. |
+| global | object | `{}` | Compatibility values inherited from umbrella charts. Accepted but ignored by this chart. |
 | inferenceGraphs | object | `{"example-inferencegraph":{"annotations":{},"apiVersion":"serving.kserve.io/v1alpha1","enabled":false,"labels":{},"namespace":"default","spec":{"nodes":{"root":{"routerType":"Sequence","steps":[{"serviceName":"predictor-a"},{"data":"$request","serviceName":"predictor-b"}]}}},"status":{}}}` | InferenceGraph resources to render, keyed by resource name. |
 | inferenceGraphs.example-inferencegraph.enabled | bool | `false` | Set to `true` to render this resource. |
 | inferenceGraphs.example-inferencegraph.namespace | string | `"default"` | Resource namespace. Defaults to the Helm release namespace. |

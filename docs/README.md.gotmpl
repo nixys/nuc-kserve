@@ -70,10 +70,12 @@ Every map value uses the same generic contract, and the resource name comes from
 
 Global controls:
 
+- `enabled`
 - `nameOverride`
 - `commonLabels`
 - `commonAnnotations`
 - `apiVersions.*`
+- `global` (accepted for umbrella-chart compatibility and ignored by templates)
 
 The value contract is validated by [values.schema.json](values.schema.json).
 

@@ -1,6 +1,9 @@
 # -- Enable nuc-kserve chart rendering.
 enabled: true
 
+# -- Compatibility values inherited from umbrella charts. Accepted but ignored by this chart.
+global: {}
+
 # -- Override the default chart label name if needed.
 nameOverride: ""
 
