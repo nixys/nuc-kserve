@@ -53,7 +53,7 @@ status:
 {{- $namespaced := .namespaced -}}
 {{- $documents := list -}}
 {{- range $resourceName, $item := $items -}}
-{{- if or (not (hasKey $item "enabled")) $item.enabled -}}
+{{- if and (kindIs "map" $item) (or (not (hasKey $item "enabled")) $item.enabled) -}}
 {{- $documents = append $documents (include "nuc-kserve.renderResource" (dict "root" $root "item" $item "resourceKey" (printf "%s[%q]" $resourceKey $resourceName) "resourceName" $resourceName "defaultApiVersion" $defaultApiVersion "kind" $kind "namespaced" $namespaced)) -}}
 {{- end -}}
 {{- end -}}

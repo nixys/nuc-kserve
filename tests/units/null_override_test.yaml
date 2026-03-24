@@ -1,0 +1,31 @@
+suite: null override contract
+templates:
+  - templates/inferenceservice.yaml
+  - templates/clusterstoragecontainer.yaml
+release:
+  name: unit-test
+  namespace: unit-namespace
+
+tests:
+  - it: skips a default InferenceService when a later values file overrides it to null
+    values:
+      - ../../values.yaml.example
+      - values/null_override.values.yaml
+    template: templates/inferenceservice.yaml
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: keeps unrelated resources when one default entry is overridden to null
+    values:
+      - ../../values.yaml.example
+      - values/null_override.values.yaml
+    template: templates/clusterstoragecontainer.yaml
+    asserts:
+      - hasDocuments:
+          count: 1
+      - containsDocument:
+          kind: ClusterStorageContainer
+          apiVersion: serving.kserve.io/v1alpha1
+          name: default-storage
+          any: true

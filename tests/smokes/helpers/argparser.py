@@ -14,6 +14,7 @@ SCENARIO_CHOICES = [
     "schema-invalid-missing-name",
     "schema-invalid-empty-resource-key",
     "rendering-contract",
+    "null-override",
     "example-render",
     "example-kubeconform",
 ]

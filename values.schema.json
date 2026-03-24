@@ -142,7 +142,14 @@
         "$ref": "#/definitions/nonEmptyString"
       },
       "additionalProperties": {
-        "$ref": "#/definitions/resourceItem"
+        "anyOf": [
+          {
+            "$ref": "#/definitions/resourceItem"
+          },
+          {
+            "type": "null"
+          }
+        ]
       }
     }
   }

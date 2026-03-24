@@ -38,6 +38,16 @@ class SmokeContext:
             / "invalid-empty-resource-key.values.yaml"
         )
 
+    @property
+    def null_override_values(self) -> Path:
+        return (
+            self.repo_root
+            / "tests"
+            / "smokes"
+            / "fixtures"
+            / "null-override.values.yaml"
+        )
+
 
 def check_default_empty(context: SmokeContext) -> None:
     helm.lint(context.chart_dir, workdir=context.workdir)
@@ -126,6 +136,41 @@ def check_rendering_contract(context: SmokeContext) -> None:
     render.assert_path(cluster_runtime, "spec.supportedModelFormats[0].name", "sklearn")
 
 
+def check_null_override(context: SmokeContext) -> None:
+    values_files = [context.example_values, context.null_override_values]
+    helm.lint(
+        context.chart_dir,
+        values_files=values_files,
+        workdir=context.workdir,
+    )
+    output_path = context.render_dir / "null-override.yaml"
+    helm.template(
+        context.chart_dir,
+        release_name=context.release_name,
+        namespace=context.namespace,
+        values_files=values_files,
+        output_path=output_path,
+        workdir=context.workdir,
+    )
+
+    documents = render.load_documents(output_path)
+    render.assert_doc_count(documents, 8)
+    render.assert_kinds(
+        documents,
+        {
+            "ClusterServingRuntime",
+            "ClusterStorageContainer",
+            "InferenceGraph",
+            "LocalModelCache",
+            "LocalModelNodeGroup",
+            "LocalModelNode",
+            "ServingRuntime",
+            "TrainedModel",
+        },
+    )
+    render.select_document(documents, kind="ClusterStorageContainer", name="default-storage")
+
+
 def check_example_render(context: SmokeContext) -> None:
     helm.lint(
         context.chart_dir,
@@ -203,6 +248,7 @@ SCENARIOS: list[tuple[str, Callable[[SmokeContext], None]]] = [
     ("default-empty", check_default_empty),
     ("schema-invalid-empty-resource-key", check_schema_invalid_empty_resource_key),
     ("rendering-contract", check_rendering_contract),
+    ("null-override", check_null_override),
     ("example-render", check_example_render),
     ("example-kubeconform", check_example_kubeconform),
 ]

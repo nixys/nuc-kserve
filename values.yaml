@@ -40,6 +40,7 @@ apiVersions:
 # - apiVersion: optional override for a single resource
 # - spec: arbitrary resource spec
 # - status: optional raw status block for fixtures and synthetic manifests
+# - set an entry to null in a higher-precedence values file to suppress a lower-precedence default resource
 # Resource names come from the map keys.
 #
 # The disabled entries below are documentation stubs for helm-docs. They keep the

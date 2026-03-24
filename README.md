@@ -68,6 +68,8 @@ Every map value uses the same generic contract, and the resource name comes from
 | `spec` | no | Raw resource spec rendered as-is. |
 | `status` | no | Optional raw status block. Usually useful only for fixtures. |
 
+In a higher-precedence values file, set a map entry to `null` to suppress a default resource from a lower-precedence values file.
+
 Global controls:
 
 - `enabled`
