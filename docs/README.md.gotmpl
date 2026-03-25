@@ -6,10 +6,12 @@ The chart does not install KServe CRDs or controllers. It only renders KServe ob
 
 ## Quick Start
 
-Render the example configuration:
+Add the Nixys chart repository:
 
 ```bash
-helm template nuc-kserve . -f values.yaml.example
+helm repo add nixys https://registry.nixys.io/chartrepo/public
+# or
+helm repo add nixys https://registry.nixys.ru/chartrepo/public
 ```
 
 Install the chart:
