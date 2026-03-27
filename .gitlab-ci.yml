@@ -30,3 +30,7 @@ stages:
   - sign
   - metadata
   - verify
+
+variables:
+  KUBECONFORM_CRD_SCHEMA_LOCATION: "https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json"
+  KUBECONFORM_SKIP_KINDS: "ClusterServingRuntime,ClusterStorageContainer,InferenceGraph,InferenceService,LocalModelCache,LocalModelNodeGroup,LocalModelNode,ServingRuntime,TrainedModel"

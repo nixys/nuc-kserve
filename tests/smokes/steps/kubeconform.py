@@ -6,6 +6,38 @@ import shutil
 
 from tests.smokes.steps import system
 
+REQUIRED_SKIP_KINDS = {
+    "ClusterServingRuntime",
+    "ClusterStorageContainer",
+    "InferenceGraph",
+    "InferenceService",
+    "LocalModelCache",
+    "LocalModelNode",
+    "LocalModelNodeGroup",
+    "ServingRuntime",
+    "TrainedModel",
+}
+
+
+def _merge_skip_kinds(skip_kinds: str) -> str:
+    items: list[str] = []
+    seen: set[str] = set()
+
+    def add(value: str) -> None:
+        cleaned = value.strip()
+        if not cleaned or cleaned in seen:
+            return
+        seen.add(cleaned)
+        items.append(cleaned)
+
+    for raw in skip_kinds.split(","):
+        add(raw)
+
+    for required in sorted(REQUIRED_SKIP_KINDS):
+        add(required)
+
+    return ",".join(items)
+
 
 def validate(
     *,
@@ -37,8 +69,9 @@ def validate(
         "-schema-location",
         schema_location,
     ]
-    if skip_kinds:
-        command.extend(["-skip", skip_kinds])
+    merged_skip = _merge_skip_kinds(skip_kinds)
+    if merged_skip:
+        command.extend(["-skip", merged_skip])
     command.append(str(manifest_path))
 
     result = system.run(command, check=True)

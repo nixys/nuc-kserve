@@ -1,16 +1,29 @@
 import argparse
 import os
 from pathlib import Path
+from typing import Optional
 
 
 DEFAULT_SCHEMA_LOCATION = (
     "https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/"
     "{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json"
 )
+DEFAULT_SKIP_KINDS = (
+    "ClusterServingRuntime,ClusterStorageContainer,InferenceGraph,"
+    "InferenceService,LocalModelCache,LocalModelNodeGroup,"
+    "LocalModelNode,ServingRuntime,TrainedModel"
+)
+
+
+def _merge_skip_kinds(env_value: Optional[str]) -> str:
+    if env_value:
+        return f"{env_value},{DEFAULT_SKIP_KINDS}"
+    return DEFAULT_SKIP_KINDS
 
 SCENARIO_CHOICES = [
     "all",
     "default-empty",
+    "schema-invalid-list-contract",
     "schema-invalid-missing-name",
     "schema-invalid-empty-resource-key",
     "rendering-contract",
@@ -32,7 +45,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--kube-version", default=os.environ.get("KUBE_VERSION", "1.35.2"), help="Kubernetes version passed to kubeconform.")
     parser.add_argument("--kubeconform-bin", default=os.environ.get("KUBECONFORM_BIN", "kubeconform"), help="kubeconform binary path or command name.")
     parser.add_argument("--schema-location", default=os.environ.get("KUBECONFORM_CRD_SCHEMA_LOCATION", DEFAULT_SCHEMA_LOCATION), help="Additional kubeconform schema location for KServe CRDs.")
-    parser.add_argument("--skip-kinds", default=os.environ.get("KUBECONFORM_SKIP_KINDS", "ClusterServingRuntime,ClusterStorageContainer,InferenceGraph,InferenceService,LocalModelCache,LocalModelNodeGroup,LocalModelNode,ServingRuntime,TrainedModel"), help="Comma-separated kinds to skip in kubeconform.")
+    parser.add_argument("--skip-kinds", default=_merge_skip_kinds(os.environ.get("KUBECONFORM_SKIP_KINDS")), help="Comma-separated kinds to skip in kubeconform.")
     parser.add_argument("--workdir", default=None, help="Optional existing directory for staged chart and rendered manifests.")
     parser.add_argument("--keep-workdir", action="store_true", help="Keep the staged work directory after the run.")
     return parser

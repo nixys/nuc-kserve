@@ -254,6 +254,7 @@ SCENARIOS: list[tuple[str, Callable[[SmokeContext], None]]] = [
 ]
 
 SCENARIO_ALIASES = {
+    "schema-invalid-list-contract": "schema-invalid-empty-resource-key",
     "schema-invalid-missing-name": "schema-invalid-empty-resource-key",
 }
 
