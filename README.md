@@ -1,5 +1,7 @@
 # NUC KServe
 
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/nuc-kserve)](https://artifacthub.io/packages/search?repo=nuc-kserve)
+
 Helm chart for rendering KServe custom resources from declarative values.
 
 The chart does not install KServe CRDs or controllers. It only renders KServe objects that are already supported by the target cluster.
