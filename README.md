@@ -11,18 +11,15 @@ The chart does not install KServe CRDs or controllers. It only renders KServe ob
 Add the Nixys chart repository:
 
 ```bash
-helm repo add nixys https://registry.nixys.io/chartrepo/public
-# or
-helm repo add nixys https://registry.nixys.ru/chartrepo/public
+helm repo add nixys https://registry.nixys.io/nuc
 ```
 
 Install the chart:
 
 ```bash
-helm install nuc-kserve . \
+helm install nuc-kserve nixys/nuc-kserve \
   --namespace kserve \
-  --create-namespace \
-  -f values.yaml.example
+  --create-namespace
 ```
 
 Install the local README generator hook:
